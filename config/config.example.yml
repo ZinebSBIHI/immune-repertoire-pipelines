@@ -64,8 +64,16 @@ cohort:
 # Repertoire-level parameters
 # ---------------------------------------------------------------------------
 repertoire:
-  # Locus to analyse. "TRB" / "IGH" for bulk; single-cell pipelines handle
-  # paired chains and use this as the primary chain.
+  # Locus to analyse. This is also what selects the receptor: the pipeline
+  # is chosen by data type (bulk vs single-cell), the receptor by this one
+  # line.
+  #   "TRB"  T-cell receptor beta
+  #   "IGH"  immunoglobulin heavy chain -> in the single-cell pipeline this
+  #          additionally switches on the B-cell steps (one heavy chain per
+  #          cell, clonal inference, germlines, somatic hypermutation,
+  #          isotypes); in the bulk pipeline it analyses the IGH repertoire.
+  # The single-cell pipeline handles paired chains and uses this as the
+  # primary chain.
   locus: "TRB"
 
   # Which column holds abundance. Named here and never inferred: UMI counts

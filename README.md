@@ -41,7 +41,7 @@ Rscript examples/simulate_airr.R
 
 # configure and run
 cp config/config.example.yml config/config.yml
-Rscript pipelines/03_bulk_repertoire.R
+Rscript pipelines/01_bulk_repertoire.R
 ```
 
 The run writes a timestamped directory under `results/` holding figures,
@@ -57,28 +57,61 @@ de novo clonotypes per subject, and the pipeline recovers them.
 
 ## Layout
 
-```
-R/                         reusable functions, no study-specific values
-  config.R                 configuration loading and validation
-  io.R                     run directories, figures, tables, reports
-  plotting.R               theme and colour-blind-safe palettes
-  repertoire.R             clonotypes, diversity, overlap, gene usage, rarefaction
-  differential_abundance.R category and significance axes, abundance-floor sweep
-  convergence.R            public clonotype groups and the permutation null
-  bcr_cells.R              one heavy chain per cell, isotypes, dominant clones
-  statistics.R             paired tests at small n, attainable p, concordance
+The pipelines are named on a single axis — the kind of sequencing, which
+fixes the input format and the unit of observation. The receptor (TCR or
+BCR) is a configuration choice, not a separate pipeline, because the
+repertoire metrics are identical; BCR simply adds the immunoglobulin-only
+steps (clonal inference, germlines, somatic hypermutation, isotypes), which
+switch on automatically for an Ig locus.
 
-pipelines/                 one script per analysis, each driven by the config
-  01_tcr_single_cell.R     Cell Ranger VDJ -> clonotypes, diversity, Seurat
-  02_bcr_single_cell.R     AIRR -> clones, germlines, SHM, isotypes, convergence
-  03_bulk_repertoire.R     AIRR -> structure, differential abundance, convergence
-  04_gex_single_cell.R     10x matrices -> QC, clustering, markers, scores
+```
+pipelines/                      one script per data type, driven by the config
+  01_bulk_repertoire.R          bulk TCR or BCR   (unit: molecule / UMI)
+  02_single_cell_repertoire.R   single-cell TCR or BCR   (unit: cell)
+  03_single_cell_gex.R          single-cell transcriptome (Seurat v5)
+
+R/
+  setup.R                  locate the repository root, source the modules
+  core/
+    config.R               configuration loading and validation
+    io.R                   run directories, figures, tables, reports
+    plotting.R             theme and colour-blind-safe palettes
+  repertoire/
+    clonotypes.R           clonotype definition, collapsing, gene usage
+    metrics.R              diversity, clonality, overlap
+    rarefaction.R          resampling to a common depth
+    sections.R             the shared analysis sections both repertoire
+                           pipelines call, so they cannot drift apart
+  analysis/
+    differential_abundance.R  category and significance axes, floor sweep
+    convergence.R             public clonotype groups and the permutation null
+    statistics.R              paired tests at small n, attainable p
+  bcr/
+    cells.R                one heavy chain per cell, isotypes, dominant clones
 
 config/config.example.yml  the only place study-specific values belong
 docs/                      design notes and the verified bibliography
 examples/simulate_airr.R   generates the example dataset
 data/README.md             where to put inputs and reference databases
 ```
+
+### Which pipeline for which data
+
+| You have | Pipeline | Set in config |
+|---|---|---|
+| Bulk TCRβ (MiXCR / AIRR TSV, one file per sample) | `01_bulk_repertoire.R` | `locus: TRB` |
+| Bulk BCR / IGH (AIRR TSV per sample) | `01_bulk_repertoire.R` | `locus: IGH` |
+| Single-cell TCR (Cell Ranger VDJ contigs, or AIRR per library) | `02_single_cell_repertoire.R` | `locus: TRB` |
+| Single-cell BCR (AIRR per library, MakeDb output) | `02_single_cell_repertoire.R` | `locus: IGH` |
+| Single-cell gene expression (Cell Ranger `.h5`) | `03_single_cell_gex.R` | — |
+
+The two repertoire pipelines run the same analysis sections — composition,
+clonotype-definition sensitivity, structure, diversity at common depth, gene
+usage, overlap, convergence against a permutation null, paired comparisons —
+from one shared implementation in `R/repertoire/sections.R`. Pipeline 01 adds
+differential clonal abundance against a within-subject baseline (which a
+longitudinal bulk design has and a cross-sectional panel usually does not);
+pipeline 02 adds the immunoglobulin steps when the locus is `IGH`.
 
 ---
 
@@ -102,44 +135,39 @@ same however it was launched.
 
 ## The pipelines
 
-### 01 — Single-cell TCR repertoire
+### 01 — Bulk repertoire (TCR or BCR)
 
-`filtered_contig_annotations.csv` per library from Cell Ranger VDJ.
+AIRR Rearrangement TSV per sample, from MiXCR or IgBLAST. Set `locus` to
+`TRB` for bulk TCR or `IGH` for bulk BCR; the unit of observation is the
+molecule (UMI).
 
-Clonotypes under all four definitions in common use, reported side by side
-so the choice is visible; clonal structure in cells rather than molecules,
-since a one-cell clone with many UMIs is not an expansion; diversity at
-native and common cell number; CDR3 length; V/J usage at clonotype and
-molecule level; pairwise overlap. If a Seurat object is present it attaches
-the repertoire to it — and checks the barcode overlap first, reporting a
-failure rather than attaching the repertoire to nothing while appearing to
-succeed.
-
-### 02 — Single-cell BCR repertoire
-
-AIRR TSV per library, from Cell Ranger V(D)J → IgBLAST → MakeDb.
-
-One heavy chain per cell with doublets removed rather than resolved; clonal
-assignment within subject, with the threshold either estimated from the
-distance-to-nearest distribution or fixed; germlines with the D segment
-masked; light-chain subclones; somatic hypermutation by IMGT region;
-isotypes with the unswitched compartment reported combined; expansion
-thresholds matched to resting or stimulated material; dominant-clone
-profiling; convergence against a permutation null.
-
-### 03 — Bulk TCR/BCR repertoire
-
-AIRR TSV per sample, from MiXCR or IgBLAST.
-
-Composition QC; the abundance-floor sweep; repertoire structure and clonal
-space homeostasis; diversity at native and rarefied depth; overlap with each
-subject's own baseline; gene usage at two levels; differential clonal
-abundance on both axes with persistence across timepoints; convergence
-against a permutation null.
+Composition QC; clonotype-definition sensitivity across the four definitions
+in common use; repertoire structure and clonal space homeostasis; diversity
+at native and rarefied depth; V/J gene usage at clonotype and molecule level;
+overlap with each subject's own baseline; differential clonal abundance on
+both axes (descriptive category and Fisher/FDR significance, kept separate)
+with the abundance-floor sweep; convergence against a permutation null;
+paired comparisons across conditions with the attainable-p bound.
 
 This is the pipeline exercised by the example dataset.
 
-### 04 — Single-cell transcriptome
+### 02 — Single-cell repertoire (TCR or BCR)
+
+Cell Ranger VDJ `filtered_contig_annotations.csv`, or AIRR TSV per library
+(MakeDb output). The unit of observation is the cell, and the pipeline
+refuses input that carries no per-cell barcode rather than counting each
+molecule as a cell.
+
+It runs the same shared sections as pipeline 01 — structure, diversity at
+common cell number, gene usage, overlap, convergence — reported in cells.
+With `locus: IGH` it additionally runs the immunoglobulin steps: one heavy
+chain per cell with doublets removed rather than resolved; clonal assignment
+within subject, threshold estimated or fixed; germlines with the D segment
+masked; light-chain subclones; somatic hypermutation by IMGT region;
+isotypes with the unswitched compartment reported combined. With a TCR
+locus those steps are skipped, since TCRs do not hypermutate.
+
+### 03 — Single-cell transcriptome
 
 Cell Ranger filtered feature-barcode matrices (`.h5`) per library.
 

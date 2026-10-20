@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 # ---------------------------------------------------------------------------
-# Pipeline 04 - Single-cell transcriptome (Seurat v5)
+# Pipeline 03 - Single-cell transcriptome (Seurat v5)
 #
 # Input   Cell Ranger filtered feature-barcode matrices (.h5), one per
 #         library. Cell Ranger count runs outside R.
@@ -10,7 +10,7 @@
 #
 # Run:
 #   cp config/config.example.yml config/config.yml   # then edit
-#   Rscript pipelines/04_gex_single_cell.R
+#   Rscript pipelines/03_single_cell_gex.R
 #
 # Steps
 #   1  Read matrices, build one object per library
@@ -43,31 +43,14 @@ suppressPackageStartupMessages({
   library(tidyr)
 })
 
-ROOT <- local({
-  candidates <- getwd()
-  a <- commandArgs(trailingOnly = FALSE)
-  f <- sub("^--file=", "", a[grepl("^--file=", a)])
-  if (length(f)) candidates <- c(dirname(dirname(normalizePath(f[1]))), candidates)
-  for (start in candidates) {
-    d <- normalizePath(start, mustWork = FALSE)
-    for (i in 1:6) {
-      if (dir.exists(file.path(d, "R")) &&
-          file.exists(file.path(d, "config", "config.example.yml"))) return(d)
-      if (identical(dirname(d), d)) break
-      d <- dirname(d)
-    }
-  }
-  stop("Could not locate the repository root. Run from the repository ",
-       "directory:\n  Rscript pipelines/04_gex_single_cell.R", call. = FALSE)
-})
-for (.f in list.files(file.path(ROOT, "R"), pattern = "[.]R$",
-                      full.names = TRUE)) source(.f)
+ROOT <- local({ source("R/setup.R", local = TRUE); find_repo_root() })
+source(file.path(ROOT, "R/setup.R")); source_modules(ROOT)
 
-need(c("Seurat", "SeuratObject"), "Pipeline 04 (single-cell transcriptome)")
+need(c("Seurat", "SeuratObject"), "Pipeline 03 (single-cell transcriptome)")
 suppressPackageStartupMessages(library(Seurat))
 
 cfg     <- load_config(file.path(ROOT, "config/config.yml"))
-run_dir <- init_run(cfg, "04_gex_single_cell")
+run_dir <- init_run(cfg, "03_single_cell_gex")
 use_pub_theme()
 
 report <- open_report(file.path(run_dir, "REPORT.txt"),
@@ -432,7 +415,8 @@ saveRDS(obj, file.path(run_dir, "seurat_annotated.rds"))
 report$h1("8. Notes")
 report$p("The clustered and scored object is saved as",
          "seurat_annotated.rds;",
-         "\npipeline 01 attaches a TCR repertoire to it. Parameters are in",
+         "\nit carries the clusters and scores the repertoire can be joined",
+         "\nto by cell barcode. Parameters are in",
          "\nresolved_config.yml and package versions in sessionInfo.txt.")
 report$close()
 

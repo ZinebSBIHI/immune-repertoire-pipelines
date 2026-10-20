@@ -30,49 +30,43 @@ no restricted input, and to check the methods against a known answer.
 
 ## Expected inputs
 
-### Pipeline 01 — single-cell TCR
-
-Cell Ranger VDJ output, one directory per library, each containing
-`filtered_contig_annotations.csv`. The library name is taken from the
-containing directory.
-
-```
-data_dir/
-  <library_1>/filtered_contig_annotations.csv
-  <library_2>/filtered_contig_annotations.csv
-```
-
-Optionally `seurat_annotated.rds` at the top of `data_dir`, to which the
-repertoire is attached. Pipeline 04 produces a suitable object; a symlink is
-fine.
-
-### Pipeline 02 — single-cell BCR
-
-AIRR Rearrangement TSV, one file per library, as written by MakeDb.py after
-IgBLAST. Searched recursively.
-
-```
-data_dir/
-  <library_1>.airr.tsv
-  <library_2>.airr.tsv
-```
-
-Must carry `cell_id` (or `barcode`), `locus`, `v_call`, `j_call`,
-`junction`, `sequence_alignment`, `c_call`, `productive`, and a UMI count.
-
-### Pipeline 03 — bulk repertoire
+### Pipeline 01 — bulk repertoire (`locus: TRB` or `IGH`)
 
 AIRR Rearrangement TSV, one file per sample, from MiXCR or IgBLAST.
 
+```
+data_dir/
+  <sample_1>.airr.tsv
+  <sample_2>.airr.tsv
+```
+
 Must carry `v_call`, `j_call`, `junction`, `junction_aa`, `locus`,
 `productive`, and an abundance column (`umi_count` preferred,
-`duplicate_count` otherwise).
+`duplicate_count` otherwise). This is the format the example dataset uses.
 
-### Pipeline 04 — single-cell transcriptome
+### Pipeline 02 — single-cell repertoire (`locus: TRB` or `IGH`)
+
+Either of two input conventions, one per library, searched recursively:
+
+```
+data_dir/
+  <library_1>/filtered_contig_annotations.csv   # Cell Ranger VDJ (TCR or BCR)
+  <library_2>.airr.tsv                          # MakeDb output (BCR)
+```
+
+Every record must carry a per-cell barcode (`cell_id` or `barcode`): the
+pipeline refuses input without one rather than counting each molecule as a
+cell. Also needed: `locus`, `v_call`, `j_call`, `junction`, `junction_aa`,
+`productive`, and a UMI count. For `locus: IGH`, the B-cell steps additionally
+need `sequence_alignment` and `c_call`, and the IMGT germline references
+below.
+
+### Pipeline 03 — single-cell transcriptome
 
 Cell Ranger `count` output: `filtered_feature_bc_matrix.h5`, one per
 library. Where the default file name is kept, the library name is taken from
-the containing directory.
+the containing directory. This pipeline writes `seurat_annotated.rds`, whose
+clusters and scores can be joined to a repertoire table by cell barcode.
 
 ---
 

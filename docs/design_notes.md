@@ -14,7 +14,7 @@ what an analysis is entitled to claim.
 
 **Decision.** Richness, clone counts and clonal concentration are compared
 only at a common depth, obtained by resampling.
-*`rarefy_to_common_depth()` in `R/repertoire.R`.*
+*`rarefy_to_common_depth()` in `R/repertoire/`.*
 
 Observed richness is a monotone function of depth: sequence deeper and you
 find more clonotypes, with no biological change whatever. The same holds for
@@ -45,8 +45,8 @@ Morisita-Horn.
 
 **Decision.** `repertoire$min_abundance` is swept before it is fixed, and
 the cost of each value is reported.
-*`sweep_abundance_floor()` in `R/differential_abundance.R`; step 2 of
-pipeline 03.*
+*`sweep_abundance_floor()` in `R/analysis/differential_abundance.R`; step 2 of
+pipeline 01.*
 
 The floor below which a clonotype is not counted is the most consequential
 free parameter in bulk repertoire work, and it acts on de novo calls in two
@@ -80,7 +80,7 @@ rather than guessing.*
 
 **Decision.** Differential abundance returns two independent axes and never
 merges them into a single causal label.
-*`test_clonal_abundance()` in `R/differential_abundance.R`.*
+*`test_clonal_abundance()` in `R/analysis/differential_abundance.R`.*
 
 - **Category** is descriptive, relative to the subject's own baseline:
   `de_novo`, `pre_existing_expanded`, `stable`, `contracting`, `lost`.
@@ -111,7 +111,7 @@ fold-change claims the functional validation that was not performed.
 
 **Decision.** The number of public clonotype groups is always reported
 against a label-permutation null.
-*`permute_public_groups()` in `R/convergence.R`.*
+*`permute_public_groups()` in `R/analysis/convergence.R`.*
 
 The count of public groups rises with repertoire depth, with the number of
 subjects, and with a looser identity threshold. On its own it is not
@@ -154,7 +154,7 @@ Three further choices:
 **Decision.** Every paired test reports the smallest p-value its sample size
 can attain, and direction concordance across subjects is reported as a
 first-class result.
-*`attainable_p_paired()`, `paired_comparison()` in `R/statistics.R`.*
+*`attainable_p_paired()`, `paired_comparison()` in `R/analysis/statistics.R`.*
 
 A paired signed-rank test on *n* pairs cannot return a two-sided p below
 2·2⁻ⁿ, whatever the effect size:
@@ -182,7 +182,7 @@ including the bound, rather than a bare significance verdict.
 ## 6. Gene usage at clonotype level and at molecule level
 
 **Decision.** V and J usage is computed both ways and both are reported.
-*`gene_usage(level = ...)` in `R/repertoire.R`.*
+*`gene_usage(level = ...)` in `R/repertoire/`.*
 
 At molecule level — or at cell level in single-cell data — one large clone
 dominates its sample's usage profile. An apparent V gene bias can be a
@@ -200,7 +200,7 @@ repertoire.
 **Decision.** Barcodes with two well-supported heavy chains are dropped as
 doublets rather than resolved; elsewhere the dominant chain represents the
 cell, with class-switched isotypes preferred.
-*`resolve_one_heavy_per_cell()` in `R/bcr_cells.R`.*
+*`resolve_one_heavy_per_cell()` in `R/bcr/cells.R`.*
 
 A 10x V(D)J library reports more than one heavy chain per barcode for
 several different reasons, which deserve different treatment: ambient mRNA
@@ -222,7 +222,7 @@ quantity that means something is the combined unswitched fraction, and
 
 **Decision.** Clones above 1% of a subject's cells are profiled with the
 criteria needed to judge them; nothing is excluded by the code.
-*`profile_dominant_clones()` in `R/bcr_cells.R`.*
+*`profile_dominant_clones()` in `R/bcr/cells.R`.*
 
 A single lineage can account for most of a compartment, and then every
 repertoire-level statistic on that compartment follows it: gene usage, CDR3
@@ -256,7 +256,7 @@ material is met trivially after stimulation. *`expansion_threshold()`.*
 **Decision.** Single-cell QC thresholds come from a per-sample block in the
 configuration, and the report names every library that fell back on the
 default.
-*Step 2 of pipeline 04; `gex$qc` in the configuration.*
+*Step 2 of pipeline 03; `gex$qc` in the configuration.*
 
 A resting library and a stimulated one do not share an upper bound on
 `nFeature_RNA`: proliferating cells are larger and carry more transcripts. A single global threshold therefore preferentially discards the
@@ -269,7 +269,7 @@ like careful quality control.
 
 **Decision.** `gex$integration$method` defaults to `none`, and the report
 states whether correction was applied and on what variable.
-*Step 3 of pipeline 04.*
+*Step 3 of pipeline 03.*
 
 Integration makes samples resemble each other. Where batch and condition
 coincide — as they do whenever each condition is prepared as its own
@@ -288,7 +288,7 @@ next check possible.
 **Decision.** Every cluster's largest single-subject fraction is computed,
 and clusters above the configured threshold are named in the report before
 any proportion is compared.
-*Step 5 of pipeline 04; `gex$max_single_subject_fraction`.*
+*Step 5 of pipeline 03; `gex$max_single_subject_fraction`.*
 
 If a cluster is 95% one subject's cells, a difference in its size between
 treatment arms is a difference between subjects. The comparison is not
