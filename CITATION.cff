@@ -1,0 +1,36 @@
+cff-version: 1.2.0
+title: "immune-repertoire-pipelines: reproducible R workflows for adaptive immune receptor repertoire and single-cell transcriptome analysis"
+message: "If you use this software, please cite it as below."
+type: software
+authors:
+  - family-names: "Sbihi"
+    given-names: "Zineb"
+    orcid: "https://orcid.org/0000-0002-6695-7695"
+repository-code: "https://github.com/ZinebSBIHI/immune-repertoire-pipelines"
+license: MIT
+version: "0.1.0"
+date-released: "2026-10-20"
+keywords:
+  - immunology
+  - AIRR
+  - T-cell receptor
+  - B-cell receptor
+  - repertoire sequencing
+  - single-cell RNA-seq
+  - somatic hypermutation
+  - clonal expansion
+  - reproducible research
+  - R
+abstract: >-
+  A set of configuration-driven R workflows for adaptive immune receptor
+  repertoire (AIRR) analysis and the single-cell transcriptome analyses that
+  accompany it. Four pipelines cover single-cell TCR repertoires, single-cell
+  BCR repertoires including clonal inference and somatic hypermutation, bulk
+  TCR/BCR repertoires with differential clonal abundance testing, and
+  single-cell gene expression. The workflows are written to be applied to any
+  cohort: study-specific labels, thresholds and contrasts are supplied through
+  a single configuration file, and the analytical decisions that are easy to
+  get wrong in repertoire work (abundance floors, rarefaction to common
+  sequencing depth, separation of descriptive category from statistical
+  significance, attainable power at small sample size) are made explicit and
+  diagnosable.

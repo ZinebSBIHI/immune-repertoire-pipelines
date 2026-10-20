@@ -1,0 +1,60 @@
+# ---- R ----
+.Rhistory
+.Rapp.history
+.RData
+.Rproj.user/
+*.Rproj
+.Ruserdata
+*_cache/
+/cache/
+.Renviron
+
+# ---- renv ----
+renv/library/
+renv/local/
+renv/staging/
+renv/python/
+renv/sandbox/
+
+# ---- Analysis inputs (never committed) ----
+# Primary data stay outside the repository. Point the pipelines at them
+# through config/config.yml, which is itself untracked.
+config/config.yml
+data/raw/
+data/interim/
+data/*.h5
+data/*.tsv
+data/*.tsv.gz
+data/*.csv
+data/*.rds
+data/*.RDS
+data/*.RData
+data/*.rdata
+!data/README.md
+# Simulated example data are NOT committed: examples/simulate_airr.R
+# reproduces them exactly from the configured seed.
+data/example/
+
+# ---- Outputs ----
+results/
+output/
+outputs/
+figures/
+*.pdf
+*.png
+*.svg
+!docs/img/*.png
+!docs/img/*.svg
+
+# ---- Reference databases (licensed separately, fetched locally) ----
+reference/
+germlines/
+db/
+
+# ---- OS / editors ----
+.DS_Store
+Thumbs.db
+*~
+*.swp
+.vscode/
+.idea/
