@@ -1,0 +1,64 @@
+Package: immunerepertoire
+Type: Package
+Title: Shared Core for Reproducible Immune Repertoire and Single-Cell Analysis
+Version: 0.2.0
+Authors@R:
+    person("Zineb", "Sbihi",
+           email = "ZinebSBIHI@users.noreply.github.com",
+           role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-6695-7695"))
+Description: The shared functions behind three companion analysis pipelines
+    for adaptive immune receptor repertoires (bulk and single-cell, T-cell and
+    B-cell receptors) and single-cell gene expression. It provides clonotype
+    definition and collapsing, diversity and clonality indices, rarefaction to
+    a common sequencing depth, repertoire overlap, gene usage, differential
+    clonal abundance against a within-subject baseline with descriptive
+    category and statistical significance kept as separate axes, convergence
+    between subjects tested against a label-permutation null, paired
+    comparisons that report the smallest p-value attainable at small sample
+    size, and B-cell receptor processing (one heavy chain per cell, clonal
+    inference, germlines, somatic hypermutation, isotypes). Every analysis is
+    driven by a single validated configuration file, and every run writes the
+    resolved configuration and session information beside its outputs.
+License: MIT + file LICENSE
+URL: https://github.com/ZinebSBIHI/immune-repertoire-pipelines
+BugReports: https://github.com/ZinebSBIHI/immune-repertoire-pipelines/issues
+Encoding: UTF-8
+Depends:
+    R (>= 4.1)
+Imports:
+    dplyr (>= 1.1.0),
+    ggplot2 (>= 3.4.0),
+    graphics,
+    grDevices,
+    rlang,
+    scales,
+    stats,
+    stringdist,
+    tidyr,
+    utils,
+    yaml
+Suggests:
+    alakazam,
+    Biostrings,
+    circlize,
+    DECIPHER,
+    dowser,
+    ggalluvial,
+    ggseqlogo,
+    ggtree,
+    harmony,
+    igraph,
+    patchwork,
+    scoper,
+    Seurat,
+    SeuratObject,
+    shazam,
+    testthat (>= 3.0.0),
+    Trex,
+    withr
+Remotes:
+    github::BorchLab/Trex
+Config/testthat/edition: 3
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.1

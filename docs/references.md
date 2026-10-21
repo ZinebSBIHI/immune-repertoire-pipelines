@@ -95,7 +95,28 @@ actually does.
   2022;18(4):e1009885.
   [doi:10.1371/journal.pcbi.1009885](https://doi.org/10.1371/journal.pcbi.1009885).
   PMID 35468128.
-  — dowser.
+  — dowser: lineage trees (`section_lineage_trees()`).
+
+- Hershberg U, Uduman M, Shlomchik MJ, Kleinstein SH. Improved methods for
+  detecting selection by mutation analysis of Ig V region sequences.
+  *Int Immunol.* 2008;20(5):683-694.
+  [doi:10.1093/intimm/dxn026](https://doi.org/10.1093/intimm/dxn026).
+  PMID 18397909.
+  — Why replacement and silent mutations are counted separately in CDR and
+  FWR (`section_rs_ratio()`).
+
+- Uduman M, Yaari G, Hershberg U, Stern JA, Shlomchik MJ, Kleinstein SH.
+  Detecting selection in immunoglobulin sequences. *Nucleic Acids Res.*
+  2011;39(Web Server issue):W499-W504.
+  [doi:10.1093/nar/gkr413](https://doi.org/10.1093/nar/gkr413).
+  PMID 21665923.
+  — The focused test statistic used by `section_baseline_selection()`.
+
+- Schliep KP. phangorn: phylogenetic analysis in R. *Bioinformatics.*
+  2011;27(4):592-593.
+  [doi:10.1093/bioinformatics/btq706](https://doi.org/10.1093/bioinformatics/btq706).
+  PMID 21169378.
+  — The maximum-likelihood tree engine behind dowser's `pml` build.
 
 ## Single-cell repertoire and transcriptome
 
@@ -143,6 +164,22 @@ actually does.
   visualizing single-cell data using UMAP. *Nat Biotechnol.* 2019;37:38-44.
   [doi:10.1038/nbt.4314](https://doi.org/10.1038/nbt.4314).
   PMID 30531897.
+
+- Borcherding N, Kim W, Quinn M, et al. CD4+ T cells exhibit distinct
+  transcriptional phenotypes in the lymph nodes and blood following mRNA
+  vaccination in humans. *Nat Immunol.* 2024;25(9):1731-1741.
+  [doi:10.1038/s41590-024-01888-9](https://doi.org/10.1038/s41590-024-01888-9).
+  PMID 39164479.
+  — Trex: receptor embedding and the bundled reference of receptors of
+  known specificity, whose annotation rule `annotate_cells_by_cdr3()`
+  reproduces.
+
+- Schattgen SA, Guion K, Crawford JC, et al. Integrating T cell receptor
+  sequences and transcriptional profiles by clonotype neighbor graph analysis
+  (CoNGA). *Nat Biotechnol.* 2022;40(1):54-63.
+  [doi:10.1038/s41587-021-00989-2](https://doi.org/10.1038/s41587-021-00989-2).
+  PMID 34426704.
+  — One representative cell per clonotype (`conga_reduction()`).
 
 - Tirosh I, Izar B, Prakadan SM, et al. Dissecting the multicellular
   ecosystem of metastatic melanoma by single-cell RNA-seq. *Science.*
@@ -217,6 +254,18 @@ actually does.
   [doi:10.1093/bioinformatics/btx286](https://doi.org/10.1093/bioinformatics/btx286).
   PMID 28481982.
 
+- Goncharov M, Bagaev D, Shcherbinin D, et al. VDJdb in the pandemic era: a
+  compendium of T cell receptors specific for SARS-CoV-2. *Nat Methods.*
+  2022;19(9):1017-1019.
+  [doi:10.1038/s41592-022-01578-0](https://doi.org/10.1038/s41592-022-01578-0).
+  PMID 35970936.
+
+- Raybould MIJ, Kovaltsuk A, Marks C, Deane CM. CoV-AbDab: the coronavirus
+  antibody database. *Bioinformatics.* 2021;37(5):734-735.
+  [doi:10.1093/bioinformatics/btaa739](https://doi.org/10.1093/bioinformatics/btaa739).
+  PMID 32805021.
+  — The layout read by `read_antibody_reference()`.
+
 - Vita R, Mahajan S, Overton JA, et al. The Immune Epitope Database (IEDB):
   2018 update. *Nucleic Acids Res.* 2019;47(D1):D339-D343.
   [doi:10.1093/nar/gky1006](https://doi.org/10.1093/nar/gky1006).
@@ -228,6 +277,68 @@ heavily skewed towards a few well-studied epitopes, so the annotated
 fraction of a repertoire reflects what has been studied at least as much as
 what the repertoire recognises. An unannotated clonotype is uncharacterised,
 not non-specific.
+
+## Diversity spectra, CDR3 features and clone tracking
+
+- Hill MO. Diversity and evenness: a unifying notation and its consequences.
+  *Ecology.* 1973;54(2):427-432.
+  — Hill numbers (`hill_numbers()`). Not indexed in PubMed; cited from the
+  journal.
+
+- Hurlbert SH. The nonconcept of species diversity: a critique and
+  alternative parameters. *Ecology.* 1971;52(4):577-586.
+  — Expected richness at a smaller sample size, the exact rarefaction curve
+  of `rarefaction_curve()`. Not indexed in PubMed; cited from the journal.
+
+- Greiff V, Bhat P, Cook SC, Menzel U, Kang W, Reddy ST. A bioinformatic
+  framework for immune repertoire diversity profiling enables detection of
+  immunological status. *Genome Med.* 2015;7(1):49.
+  [doi:10.1186/s13073-015-0169-8](https://doi.org/10.1186/s13073-015-0169-8).
+  PMID 26140055.
+  — Diversity profiles across Hill orders rather than a single index.
+
+- Kyte J, Doolittle RF. A simple method for displaying the hydropathic
+  character of a protein. *J Mol Biol.* 1982;157(1):105-132.
+  [doi:10.1016/0022-2836(82)90515-0](https://doi.org/10.1016/0022-2836(82)90515-0).
+  PMID 7108955.
+  — The hydropathy scale behind the CDR3 GRAVY score.
+
+- Wagih O. ggseqlogo: a versatile R package for drawing sequence logos.
+  *Bioinformatics.* 2017;33(22):3645-3647.
+  [doi:10.1093/bioinformatics/btx469](https://doi.org/10.1093/bioinformatics/btx469).
+  PMID 29036507.
+
+- Wright ES. DECIPHER: harnessing local sequence context to improve protein
+  multiple sequence alignment. *BMC Bioinformatics.* 2015;16:322.
+  [doi:10.1186/s12859-015-0749-z](https://doi.org/10.1186/s12859-015-0749-z).
+  PMID 26445311.
+  — Alignment of the CDR3s of a public group before its logo is drawn.
+
+- Csardi G, Nepusz T. The igraph software package for complex network
+  research. *InterJournal Complex Systems.* 2006:1695.
+  — CDR3 similarity networks. Not indexed in PubMed.
+
+- Gu Z, Gu L, Eils R, Schlesner M, Brors B. circlize implements and enhances
+  circular visualization in R. *Bioinformatics.* 2014;30(19):2811-2812.
+  [doi:10.1093/bioinformatics/btu393](https://doi.org/10.1093/bioinformatics/btu393).
+  PMID 24930139.
+  — V-J chord diagrams.
+
+- Brunson JC. ggalluvial: layered grammar for alluvial plots.
+  *J Open Source Softw.* 2020;5(49):2017.
+  [doi:10.21105/joss.02017](https://doi.org/10.21105/joss.02017).
+  PMID 36919162.
+  — Clone tracking across samples and timepoints.
+
+## Example data
+
+- Laserson U, Vigneault F, Gadala-Maria D, et al. High-resolution antibody
+  dynamics of vaccine-induced immune responses. *Proc Natl Acad Sci U S A.*
+  2014;111(13):4928-4933.
+  [doi:10.1073/pnas.1323862111](https://doi.org/10.1073/pnas.1323862111).
+  PMID 24639495.
+  — Source of `alakazam::ExampleDb`, the public example of the bulk B-cell
+  pipeline.
 
 ## Statistics and metrics
 
@@ -256,4 +367,4 @@ not non-specific.
 - Okabe M, Ito K. Color universal design (CUD): how to make figures and
   presentations that are friendly to colorblind people. 2008.
   <https://jfly.uni-koeln.de/color/>
-  — The categorical palette in `R/plotting.R`. Not a journal article.
+  — The categorical palette in `R/core-plotting.R`. Not a journal article.
