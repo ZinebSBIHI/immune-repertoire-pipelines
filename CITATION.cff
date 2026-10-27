@@ -1,0 +1,37 @@
+cff-version: 1.2.0
+title: "immunerepertoire: shared core for reproducible immune repertoire and single-cell analysis"
+message: "If you use this software, please cite it as below, together with the methods listed in docs/references.md."
+type: software
+authors:
+  - family-names: "Sbihi"
+    given-names: "Zineb"
+    orcid: "https://orcid.org/0000-0002-6695-7695"
+repository-code: "https://github.com/ZinebSBIHI/immune-repertoire-pipelines"
+license: MIT
+version: "0.2.0"
+date-released: "2026-10-21"
+keywords:
+  - immunology
+  - AIRR
+  - T-cell receptor
+  - B-cell receptor
+  - repertoire sequencing
+  - single-cell RNA-seq
+  - somatic hypermutation
+  - clonal expansion
+  - antigen specificity
+  - reproducible research
+  - R
+abstract: >-
+  An R package holding the shared methods of three configuration-driven
+  pipelines for adaptive immune receptor repertoires (bulk and single-cell,
+  T-cell and B-cell receptors) and single-cell gene expression: clonotype
+  definition, diversity at a common sequencing depth, differential clonal
+  abundance against a within-subject baseline with category and significance
+  kept apart, clone tracking, CDR3 physicochemistry and networks,
+  convergence against a permutation null, paired statistics at small sample
+  size, specificity annotation against public receptor references, B-cell
+  clonal inference, hypermutation, selection and lineage, receptor embedding
+  joined to the transcriptome, and single-cell expression QC, clustering and
+  markers. Every analysis is driven by one validated configuration file, and
+  every run records its parameters and package versions beside its outputs.

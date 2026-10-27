@@ -1,0 +1,27 @@
+# ---- R ----
+.Rhistory
+.Rapp.history
+.RData
+.Rproj.user/
+*.Rproj
+.Ruserdata
+.Renviron
+
+# ---- package build and check ----
+*.tar.gz
+*.Rcheck/
+tests/testthat/_snaps/
+
+# ---- run outputs, data and references never belong here ----
+results/
+data/
+reference/
+config/config.yml
+
+# ---- OS / editors ----
+.DS_Store
+Thumbs.db
+*~
+*.swp
+.vscode/
+.idea/
